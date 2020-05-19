@@ -65,6 +65,19 @@
             <artifactId>fastjson</artifactId>
             <version>1.2.62</version>
         </dependency>
+        <!-- https://mvnrepository.com/artifact/org.activiti/activiti-spring-boot-starter -->
+        <!--<dependency>
+            <groupId>org.activiti</groupId>
+            <artifactId>activiti-spring-boot-starter</artifactId>
+            <version>7.0.0.Beta2</version>
+            <exclusions>
+                <exclusion>
+                    <groupId>org.mybatis</groupId>
+                    <artifactId>mybatis</artifactId>
+                </exclusion>
+            </exclusions>
+        </dependency>-->
+        <!--其他依赖有需要再加-->
         <!--Mybatis plus-->
         <dependency>
             <groupId>com.baomidou</groupId>
@@ -76,6 +89,7 @@
             <groupId>com.baomidou</groupId>
             <artifactId>mybatis-plus-generator</artifactId>
             <version>3.2.0</version>
+
         </dependency>
         <!--mybatis 代码自动生成插件使用freemarker引擎-->
         <dependency>
@@ -100,6 +114,60 @@
         <dependency>
             <groupId>org.springframework.boot</groupId>
             <artifactId>spring-boot-starter-log4j2</artifactId>
+        </dependency>
+
+
+        <dependency>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-starter-quartz</artifactId>
+            <exclusions>
+                <exclusion>
+                    <artifactId>mchange-commons-java</artifactId>
+                    <groupId>com.mchange</groupId>
+                </exclusion>
+            </exclusions>
+        </dependency>
+
+        <dependency>
+            <groupId>com.github.pagehelper</groupId>
+            <artifactId>pagehelper-spring-boot-starter</artifactId>
+            <version>1.2.5</version>
+            <exclusions>
+                <exclusion>
+                    <artifactId>mybatis-spring</artifactId>
+                    <groupId>org.mybatis</groupId>
+                </exclusion>
+                <exclusion>
+                    <artifactId>mybatis</artifactId>
+                    <groupId>org.mybatis</groupId>
+                </exclusion>
+            </exclusions>
+        </dependency>
+
+
+
+        <dependency>
+            <groupId>io.springfox</groupId>
+            <artifactId>springfox-swagger2</artifactId>
+            <version>2.9.2</version>
+        </dependency>
+
+        <dependency>
+            <groupId>com.mchange</groupId>
+            <artifactId>c3p0</artifactId>
+            <version>0.9.5.4</version>
+
+        </dependency>
+
+        <dependency>
+            <groupId>io.springfox</groupId>
+            <artifactId>springfox-swagger-ui</artifactId>
+            <version>2.9.2</version>
+        </dependency>
+        <dependency>
+            <groupId>org.apache.commons</groupId>
+            <artifactId>commons-lang3</artifactId>
+            <version>3.9</version>
         </dependency>
     </dependencies>
 

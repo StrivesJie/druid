@@ -9,14 +9,12 @@ import com.jie.druid.enums.DataSourceEnum;
 import org.apache.ibatis.plugin.Interceptor;
 import org.apache.ibatis.session.SqlSessionFactory;
 import org.apache.ibatis.type.JdbcType;
-import org.mybatis.spring.SqlSessionFactoryBean;
 import org.mybatis.spring.annotation.MapperScan;
 import org.springframework.boot.context.properties.ConfigurationProperties;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.Primary;
-import org.springframework.jdbc.datasource.DataSourceTransactionManager;
-import org.springframework.transaction.PlatformTransactionManager;
+import org.springframework.core.io.support.PathMatchingResourcePatternResolver;
 import org.springframework.transaction.annotation.EnableTransactionManagement;
 
 import javax.sql.DataSource;
@@ -83,6 +81,8 @@ public class DynamicDataSourceConfig {
         configuration.setCacheEnabled(false);
         sqlSessionFactory.setConfiguration(configuration);
         //PerformanceInterceptor(),OptimisticLockerInterceptor()
+        sqlSessionFactory.setMapperLocations(new PathMatchingResourcePatternResolver().
+                getResources("classpath:/mapper/druid/*.xml"));
         //添加分页功能
         sqlSessionFactory.setPlugins(new Interceptor[]{
                 paginationInterceptor()

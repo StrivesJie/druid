@@ -69,11 +69,11 @@ public class MybatisGenerator {
 
         // 数据源配置
         DataSourceConfig dsc = new DataSourceConfig();
-        dsc.setUrl("jdbc:mysql://localhost:3306/cop?useUnicode=true&characterEncoding=UTF-8&useJDBCCompliantTimezoneShift=true&useLegacyDatetimeCode=false&serverTimezone=UTC&useSSL=false");
+        dsc.setUrl("jdbc:mysql://localhost:3306/jie?useUnicode=true&characterEncoding=UTF-8&useJDBCCompliantTimezoneShift=true&useLegacyDatetimeCode=false&serverTimezone=UTC&useSSL=false");
         // dsc.setSchemaName("public");
         dsc.setDriverName("com.mysql.cj.jdbc.Driver");
         dsc.setUsername("root");
-        dsc.setPassword("root");
+        dsc.setPassword("123456");
         mpg.setDataSource(dsc);
         /* 自定义文件命名，注意 %s 会自动填充表实体属性！ */
         gc.setMapperName("%sDao");
@@ -144,7 +144,8 @@ public class MybatisGenerator {
         strategy.setNaming(NamingStrategy.underline_to_camel);
         strategy.setColumnNaming(NamingStrategy.underline_to_camel);
         //strategy.setSuperEntityClass("com.baomidou.ant.common.BaseEntity");
-        strategy.setEntityLombokModel(false);
+        //是否启用lombok
+        strategy.setEntityLombokModel(true);
         strategy.setRestControllerStyle(true);
         // 公共父类
         //strategy.setSuperControllerClass("com.baomidou.ant.common.BaseController");
