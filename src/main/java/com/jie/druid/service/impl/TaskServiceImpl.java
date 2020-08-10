@@ -1,13 +1,12 @@
 package com.jie.druid.service.impl;
 
-import com.jie.druid.common.ReflectUtils;
+import com.jie.common.base.ReflectUtils;
 import com.jie.druid.entity.TaskInfo;
 import com.jie.druid.service.ITaskService;
+import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.time.DateFormatUtils;
 import org.quartz.*;
 import org.quartz.impl.matchers.GroupMatcher;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Service;
@@ -18,9 +17,10 @@ import java.util.HashSet;
 import java.util.List;
 
 
+@Slf4j
 @Service
 public class TaskServiceImpl implements ITaskService {
-    private Logger logger = LoggerFactory.getLogger(TaskServiceImpl.class);
+    //private log log = LoggerFactory.getLogger(TaskServiceImpl.class);
 
     @Qualifier("scheduler")
     @Autowired
@@ -83,7 +83,7 @@ public class TaskServiceImpl implements ITaskService {
         }
         try {
             if (checkExists(jobName, jobGroup)) {
-                logger.info("add job fail, job already exist, jobGroup:{}, jobName:{}", jobGroup, jobName);
+                log.info("add job fail, job already exist, jobGroup:{}, jobName:{}", jobGroup, jobName);
             }
 
             // 构建job信息
@@ -98,7 +98,7 @@ public class TaskServiceImpl implements ITaskService {
                     .startNow().withSchedule(scheduleBuilder).build();
             scheduler.scheduleJob(jobDetail, trigger);
         } catch (SchedulerException | ClassNotFoundException e) {
-            logger.error("类名不存在或执行表达式错误,exception:{}",e.getMessage());
+            log.error("类名不存在或执行表达式错误,exception:{}",e.getMessage());
             return false;
         } catch (Exception e) {
             e.printStackTrace();
@@ -119,7 +119,7 @@ public class TaskServiceImpl implements ITaskService {
                 createTime = DateFormatUtils.format(new Date(), "yyyy-MM-dd HH:mm:ss");
         try {
             if (!checkExists(jobName, jobGroup)) {
-                logger.info("edit job fail, job is not exist, jobGroup:{}, jobName:{}", jobGroup, jobName);
+                log.info("edit job fail, job is not exist, jobGroup:{}, jobName:{}", jobGroup, jobName);
             }
             TriggerKey triggerKey = TriggerKey.triggerKey(jobName, jobGroup);
             JobKey jobKey = new JobKey(jobName, jobGroup);
@@ -133,7 +133,7 @@ public class TaskServiceImpl implements ITaskService {
 
             scheduler.scheduleJob(jobDetail, triggerSet, true);
         } catch (SchedulerException e) {
-            logger.error("类名不存在或执行表达式错误,exception:{}",e.getMessage());
+            log.error("类名不存在或执行表达式错误,exception:{}",e.getMessage());
             return false;
         }
         return true;
@@ -151,10 +151,10 @@ public class TaskServiceImpl implements ITaskService {
             if (checkExists(jobName, jobGroup)) {
                 scheduler.pauseTrigger(triggerKey);
                 scheduler.unscheduleJob(triggerKey);
-                logger.info("delete job, triggerKey:{},jobGroup:{}, jobName:{}", triggerKey ,jobGroup, jobName);
+                log.info("delete job, triggerKey:{},jobGroup:{}, jobName:{}", triggerKey ,jobGroup, jobName);
             }
         } catch (SchedulerException e) {
-            logger.error(e.getMessage());
+            log.error(e.getMessage());
             return false;
         }
         return true;
@@ -171,10 +171,10 @@ public class TaskServiceImpl implements ITaskService {
         try {
             if (checkExists(jobName, jobGroup)) {
                 scheduler.pauseTrigger(triggerKey);
-                logger.info("pause job success, triggerKey:{},jobGroup:{}, jobName:{}", triggerKey ,jobGroup, jobName);
+                log.info("pause job success, triggerKey:{},jobGroup:{}, jobName:{}", triggerKey ,jobGroup, jobName);
             }
         } catch (SchedulerException e) {
-            logger.error(e.getMessage());
+            log.error(e.getMessage());
             return false;
         }
         return true;
@@ -192,10 +192,10 @@ public class TaskServiceImpl implements ITaskService {
         try {
             if (checkExists(jobName, jobGroup)) {
                 scheduler.resumeTrigger(triggerKey);
-                logger.info("resume job success,triggerKey:{},jobGroup:{}, jobName:{}", triggerKey ,jobGroup, jobName);
+                log.info("resume job success,triggerKey:{},jobGroup:{}, jobName:{}", triggerKey ,jobGroup, jobName);
             }
         } catch (SchedulerException e) {
-            logger.error(e.getMessage());
+            log.error(e.getMessage());
             return false;
         }
         return true;
@@ -207,7 +207,7 @@ public class TaskServiceImpl implements ITaskService {
             scheduler.resumeAll();
             return true;
         } catch (SchedulerException e) {
-            logger.error("恢复所有任务失败,失败原因:{}",e.getMessage());
+            log.error("恢复所有任务失败,失败原因:{}",e.getMessage());
             return false;
         }
     }

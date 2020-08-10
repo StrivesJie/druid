@@ -1,12 +1,15 @@
 package com.jie.druid.config;
 
 import org.quartz.Scheduler;
-import org.quartz.ee.servlet.QuartzInitializerListener;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Qualifier;
+import org.springframework.beans.factory.config.PropertiesFactoryBean;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.core.io.ClassPathResource;
 import org.springframework.scheduling.quartz.SchedulerFactoryBean;
 
+import javax.sql.DataSource;
 import java.io.IOException;
 import java.util.Properties;
 
@@ -22,6 +25,10 @@ public class QuartzConfig {
     @Autowired
     private QuartzJobFactory jobFactory;
 
+    @Autowired
+    @Qualifier("master")
+    private DataSource dataSource;
+
 
 
 
@@ -29,6 +36,7 @@ public class QuartzConfig {
     public SchedulerFactoryBean schedulerFactoryBean() throws IOException {
         SchedulerFactoryBean factory = new SchedulerFactoryBean();
         factory.setQuartzProperties(quartzProperties());
+        factory.setDataSource(dataSource);
         //这样当spring关闭时，会等待所有已经启动的quartz job结束后spring才能完全shutdown。
         factory.setWaitForJobsToCompleteOnShutdown(true);
         factory.setJobFactory(jobFactory);
@@ -39,26 +47,34 @@ public class QuartzConfig {
         return factory;
     }
 
-    /*@Bean
+    @Bean
     public Properties quartzProperties() throws IOException {
         PropertiesFactoryBean propertiesFactoryBean = new PropertiesFactoryBean();
         propertiesFactoryBean.setLocation(new ClassPathResource("/quartz.properties"));
         //在quartz.properties中的属性被读取并注入后再初始化对象
         propertiesFactoryBean.afterPropertiesSet();
         return propertiesFactoryBean.getObject();
+    }
+
+    /**
+     * 注释掉 不然会报
+     * Active Scheduler of name 'xxx'
+     * already registered in Quartz SchedulerRepository错误
+     * 原因是会二次执行使用自己配置文件覆盖默认配置文件导致
+     * @return
+     * @throws IOException
+     */
+    /*@Bean
+    public QuartzInitializerListener executorListener() {
+        return new QuartzInitializerListener();
     }*/
 
     @Bean
-    public QuartzInitializerListener executorListener() {
-        return new QuartzInitializerListener();
-    }
-
-    @Bean(name="scheduler")
     public Scheduler scheduler() throws IOException {
         return schedulerFactoryBean().getScheduler();
     }
 
-    public Properties quartzProperties() throws IOException {
+    /*public Properties quartzProperties() throws IOException {
         Properties prop = new Properties();
         prop.put("quartz.scheduler.instanceName", "MyScheduler");
         prop.put("org.quartz.scheduler.instanceId", "AUTO");
@@ -80,7 +96,7 @@ public class QuartzConfig {
         prop.put("org.quartz.dataSource.quartzDataSource.password", "123456");
         prop.put("org.quartz.dataSource.quartzDataSource.maxConnections", "5");
         return prop;
-    }
+    }*/
 
 
 
